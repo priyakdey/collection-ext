@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.priyakdey'
+version = '0.0.1-alpha'
+
+repositories {
+    mavenCentral()
+}
+
+var graphvizJavaVersion = project.properties['graphviz-java.version']
+
+dependencies {
+    implementation project(":lib")
+    runtimeOnly "guru.nidi:graphviz-java:$graphvizJavaVersion"
+
+}
+
