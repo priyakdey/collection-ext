@@ -7,4 +7,4 @@ jar:
 	./gradlew :lib:jar
 
 test:
-	./gradlew :lib:test
+	./gradlew clean :lib:test --no-build-cache
