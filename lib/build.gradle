@@ -40,4 +40,38 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+
+    // TODO (priyakdey): Need to find junit5 integration with gradle or create custom listener
+//    def tableHeader = "+----------------------------------+---------+"
+//    def tableFormat = "| %-32s | %-7s |\n"
+//
+//    doFirst {
+//        println tableHeader
+//        printf(tableFormat, "Test Name", "Result")
+//        println tableHeader
+//    }
+//
+//    afterTest { desc, result ->
+//        String color;
+//        switch (result.resultType) {
+//            case TestResult.ResultType.SUCCESS:
+//                color = "\u001B[32m"; // Green
+//                break;
+//            case TestResult.ResultType.FAILURE:
+//                color = "\u001B[31m"; // Red
+//                break;
+//            default:
+//                color = "\u001B[0m";  // Reset
+//        }
+//        printf(tableFormat, "${desc.className} - ${desc.name}", "${color}${result.resultType}\u001B[0m")
+//    }
+//
+//    doLast {
+//        println tableHeader
+//    }
+
+    afterTest { desc, result ->
+        printf("%-80s - %-7s\n", "${desc.className} - ${desc.name}", "${result.resultType}")
+    }
+
 }
