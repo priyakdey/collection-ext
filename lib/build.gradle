@@ -35,43 +35,126 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-engine:$junit5Version"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5Version"
     testImplementation "org.junit.jupiter:junit-jupiter-params:$junit5Version"
+    testImplementation "org.junit.platform:junit-platform-launcher:1.10.0"
     testRuntimeOnly "guru.nidi:graphviz-java:$graphvizJavaVersion"
+
+
 }
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
 
-    // TODO (priyakdey): Need to find junit5 integration with gradle or create custom listener
-//    def tableHeader = "+----------------------------------+---------+"
-//    def tableFormat = "| %-32s | %-7s |\n"
-//
-//    doFirst {
-//        println tableHeader
-//        printf(tableFormat, "Test Name", "Result")
-//        println tableHeader
-//    }
-//
-//    afterTest { desc, result ->
-//        String color;
-//        switch (result.resultType) {
-//            case TestResult.ResultType.SUCCESS:
-//                color = "\u001B[32m"; // Green
-//                break;
-//            case TestResult.ResultType.FAILURE:
-//                color = "\u001B[31m"; // Red
-//                break;
-//            default:
-//                color = "\u001B[0m";  // Reset
-//        }
-//        printf(tableFormat, "${desc.className} - ${desc.name}", "${color}${result.resultType}\u001B[0m")
-//    }
-//
-//    doLast {
-//        println tableHeader
-//    }
+    testLogging {
+        lifecycle {
+            events("passed", "skipped", "failed")
 
-    afterTest { desc, result ->
-        printf("%-80s - %-7s\n", "${desc.className} - ${desc.name}", "${result.resultType}")
+            showExceptions = true
+            showCauses = true
+            showStackTraces = true
+        }
+
+        info.events = lifecycle.events
+        info.exceptionFormat = lifecycle.exceptionFormat
     }
+
+    List<TestDescriptor> successTests = []
+    List<TestDescriptor> failedTests = []
+    List<TestDescriptor> skippedTests = []
+
+    // ansi color codes
+    Map<String, String> ansiColorCodes =
+            ["RESET": "\u001B[0m", "RED": "\u001B[31m", "GREEN": "\u001B[32m", "YELLOW": "\u001B[33m"]
+
+
+    addTestListener(new TestListener() {
+        @Override
+        void beforeSuite(TestDescriptor testDescriptor) {}
+
+        @Override
+        void beforeTest(TestDescriptor testDescriptor) {}
+
+
+        @Override
+        void afterTest(TestDescriptor testDescriptor, TestResult testResult) {
+            switch (testResult.resultType) {
+                case TestResult.ResultType.SUCCESS:
+                    successTests.add(testDescriptor)
+                    break;
+                case TestResult.ResultType.FAILURE:
+                    failedTests.add(testDescriptor)
+                    break;
+                case TestResult.ResultType.SKIPPED:
+                    skippedTests.add(testDescriptor)
+                    break
+            }
+        }
+
+        @Override
+        void afterSuite(TestDescriptor suite, TestResult testResult) {
+            if (suite.parent == null) {
+                logger.lifecycle("\n############################### Test Run Summary ###############################\n")
+                logTestResultsTable()
+                logStats()
+                logger.lifecycle("\n################################################################################\n")
+            }
+        }
+
+        private void logTestResultsTable() {
+            def GREEN = ansiColorCodes.GREEN
+            def RED = ansiColorCodes.RED
+            def YELLOW = ansiColorCodes.YELLOW
+            def RESET = ansiColorCodes.RESET
+
+            logger.lifecycle("+--------------------+--------------------------------------------------+----------+")
+            logger.lifecycle("|       Class        |                     Test Name                    |  Status  |")
+            logger.lifecycle("+--------------------+--------------------------------------------------+----------+")
+
+            successTests.each {
+                successTest -> logTestResult(successTest, "SUCCESS", GREEN, RESET)
+            }
+
+            skippedTests.each {
+                skippedTest -> logTestResult(skippedTest, "SKIPPED", YELLOW, RESET)
+            }
+
+            failedTests.each {
+                failedTest -> logTestResult(failedTest, "FAILED", RED, RESET)
+            }
+
+            logger.lifecycle("+--------------------+--------------------------------------------------+----------+")
+        }
+
+        private void logStats() {
+            def successCount = successTests.size()
+            def skippedCount = skippedTests.size()
+            def failedCount = failedTests.size()
+            def totalCount = successCount + skippedCount + failedCount
+
+            logger.lifecycle("\nTest run statistics")
+            logger.lifecycle("------------------------")
+
+            printf("Total  : %d\n", totalCount)
+            printf("Success: %d  (%2.2f%%)\n", successCount, (successCount / totalCount) * 100.0)
+            printf("Skipped: %d  (%2.2f%%)\n", skippedCount, (skippedCount / totalCount) * 100.0)
+            printf("Failed : %d  (%2.2f%%)\n", failedCount, (failedCount / totalCount) * 100.0)
+
+        }
+
+        private void logTestResult(TestDescriptor testDescriptor, String result, String colour1, String colour2) {
+            def parentName = testDescriptor.parent.displayName
+            def displayName = testDescriptor.getDisplayName()
+            printf("|%s|%s|%s%s%s|\n", center(parentName, 20), center(displayName, 50), colour1, center(result, 10), colour2)
+        }
+
+        private String center(String s, int maxWidth) {
+            if (s.length() > maxWidth) {
+                return s.substring(0, maxWidth);
+            }
+
+            def leftPadding = (maxWidth - s.length()) / 2;
+            return s.padLeft(s.length() + leftPadding).padRight(maxWidth)
+        }
+
+    })
 
 }
