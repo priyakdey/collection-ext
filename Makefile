@@ -8,3 +8,7 @@ jar:
 
 test:
 	./gradlew clean :lib:test --no-build-cache
+
+cov:
+	./gradlew clean jacocoTestReport
+
