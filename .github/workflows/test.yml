@@ -28,9 +28,9 @@ jobs:
         with:
           java-version: '11'
           distribution: 'zulu'
-      - name: Test
+      - name: Run test suite and coverage
         run: chmod +x ./gradlew && ./gradlew :lib:test
-      - name: Analyze with SonarQube
+      - name: Code quality analysis
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}   # Generate a token on SonarQube, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew :lib:sonar
