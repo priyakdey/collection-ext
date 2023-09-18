@@ -3,6 +3,12 @@
 `collection-ext` is a Java library offering enhanced and extended data
 structures and algorithms beyond the standard Java Collection framework.
 
+[![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=priyakdey_collection-ext&metric=alert_status)](https://sonarcloud.io/dashboard?id=priyakdey_collection-ext) 
+[![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=priyakdey_collection-ext&metric=coverage)](https://sonarcloud.io/component_measures/metric/coverage/list?id=priyakdey_collection-ext)
+[![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=priyakdey_collection-ext&metric=bugs)](https://sonarcloud.io/component_measures/metric/reliability_rating/list?id=priyakdey_collection-ext)
+[![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=priyakdey_collection-ext&metric=vulnerabilities)](https://sonarcloud.io/component_measures/metric/security_rating/list?id=priyakdey_collection-ext)
+
+
 ### Disclaimer:
 
 This project is a pure education project and **should not be used for anything
