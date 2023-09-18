@@ -9,10 +9,10 @@ import java.util.Comparator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("Test::MinHeap")
+@DisplayName("MinHeap")
 class MinHeapTest {
 
-    @DisplayName("No Comparator Passed")
+    @DisplayName("natural ordering")
     @Test
     void testMinHeapNaturalOrder() {
         Heap<Integer> heap = new MinHeap<>();
@@ -47,7 +47,7 @@ class MinHeapTest {
             Arrays.toString(expected), Arrays.toString(actual)));
     }
 
-    @DisplayName("With Comparator Passed")
+    @DisplayName("comparator passed")
     @Test
     void testMinHeapWithComparator() {
         Heap<Integer> heap = new MinHeap<Integer>(Comparator.naturalOrder());

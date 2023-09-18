@@ -9,11 +9,11 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("Trie::Test")
+@DisplayName("Trie")
 class TrieTest {
 
 
-    @DisplayName("Trie::contains")
+    @DisplayName("contains a word")
     @Test
     void contains() {
         Trie trie = new Trie();
@@ -37,7 +37,7 @@ class TrieTest {
     }
 
 
-    @DisplayName("Trie::startsWith")
+    @DisplayName("if any word/s starts with a prefix")
     @Test
     void startsWith() {
         Trie trie = new Trie();
@@ -68,7 +68,7 @@ class TrieTest {
         assertFalse(trie.startsWith("doll"), "startsWith doll - expected false");
     }
 
-    @DisplayName("Trie::remove")
+    @DisplayName("delete a word")
     @Test
     void remove() {
         List<String> words =
@@ -87,7 +87,7 @@ class TrieTest {
 
     }
 
-    @DisplayName("Trie::getRecommendations")
+    @DisplayName("get recommendations")
     @Test
     void getRecommendations() {
         List<String> words =
