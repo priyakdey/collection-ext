@@ -1,0 +1,41 @@
+# This workflow triggers a complete test suite run,
+# coverage validation checks and pushes data to sonarcloud
+# whenever a PR is made against main branch.
+# The file is called `ready-to-merge`. What else did you expect it would do ? !
+
+name: Ready to Merge Workflow
+
+on:
+  pull_request:
+    branches:
+      - "main"
+
+permissions:
+  contents: read
+  pull-requests: read       # allows SonarQube to decorate PRs with analysis results
+
+jobs:
+  quality-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Source code checkout
+        uses: actions/checkout@v3
+      - name: Cache gradle dependencies
+        uses: actions/cache@v2.1.6
+        with:
+          path: |
+            ~/.gradle/caches
+            ~//gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'zulu'
+      - name: Run test suite and coverage
+        run: chmod +x ./gradlew && ./gradlew :lib:test
+      - name: Code quality analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew :lib:sonar
