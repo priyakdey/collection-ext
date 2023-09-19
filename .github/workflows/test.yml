@@ -30,7 +30,7 @@ jobs:
           distribution: 'zulu'
       - name: Run test suite and coverage
         run: chmod +x ./gradlew && ./gradlew :lib:test
-      - name: Code quality analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew :lib:sonar
+#      - name: Code quality analysis
+#        env:
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#        run: ./gradlew :lib:sonar
