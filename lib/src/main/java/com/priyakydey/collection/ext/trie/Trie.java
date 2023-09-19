@@ -33,6 +33,9 @@ public class Trie {
 
     private final Node root;
 
+    /* keeps track of current count of words in the dictionary */
+    private int size;
+
     public Trie() {
         this.root = new Node();
     }
@@ -55,7 +58,6 @@ public class Trie {
      */
     public void addWord(String word) {
         if (word.isEmpty()) {
-            root.isWord = true;
             return;
         }
 
@@ -69,6 +71,7 @@ public class Trie {
         }
 
         curr.isWord = true;
+        size++;
     }
 
     /**
@@ -102,7 +105,7 @@ public class Trie {
      */
     public boolean startsWith(String prefix) {
         if (prefix.isEmpty()) {
-            return true;
+            return size != 0;
         }
 
         Node curr = root;
@@ -156,6 +159,7 @@ public class Trie {
                 parent.children[word.charAt(i) - 'a'] = null;
             }
         }
+        size--;
     }
 
     /**
@@ -193,6 +197,14 @@ public class Trie {
         return recommendations;
     }
 
+    /**
+     * Returns the total count of words in the trie.
+     *
+     * @return count of words in the trie.
+     */
+    public int size() {
+        return size;
+    }
 
     /**
      * Converts the trie into an SVG representation using Graphviz.
@@ -208,6 +220,8 @@ public class Trie {
 
         return Graphviz.fromGraph(graph).render(Format.SVG).toString();
     }
+
+    // ---- Internal helpers ----
 
     /**
      * Recursively traverses the trie nodes and updates the graph nodes using Graphviz.
