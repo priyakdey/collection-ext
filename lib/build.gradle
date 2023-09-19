@@ -69,6 +69,18 @@ test {
             ["RESET": "\u001B[0m", "RED": "\u001B[31m", "GREEN": "\u001B[32m", "YELLOW": "\u001B[33m"]
 
 
+    def GREEN  = ansiColorCodes.GREEN
+    def RED    = ansiColorCodes.RED
+    def YELLOW = ansiColorCodes.YELLOW
+    def RESET  = ansiColorCodes.RESET
+
+    def CLASSNAME_COL_WIDTH = 20
+    def TESTNAME_COL_WIDTH  = 70
+    def STATUS_COL_WIDTH    = 10
+
+    def TABLE_BORDER = "+" + ("-" * CLASSNAME_COL_WIDTH) + "+" + ("-" * TESTNAME_COL_WIDTH) + "+" + ("-" * STATUS_COL_WIDTH) + "+"
+    def TABLE_HEADER = "|       Class        |                           Test Name                                  |  Status  |"
+
     addTestListener(new TestListener() {
         @Override
         void beforeSuite(TestDescriptor testDescriptor) {}
@@ -103,14 +115,9 @@ test {
         }
 
         private void logTestResultsTable() {
-            def GREEN = ansiColorCodes.GREEN
-            def RED = ansiColorCodes.RED
-            def YELLOW = ansiColorCodes.YELLOW
-            def RESET = ansiColorCodes.RESET
-
-            logger.lifecycle("+--------------------+--------------------------------------------------+----------+")
-            logger.lifecycle("|       Class        |                     Test Name                    |  Status  |")
-            logger.lifecycle("+--------------------+--------------------------------------------------+----------+")
+            logger.lifecycle(TABLE_BORDER)
+            logger.lifecycle(TABLE_HEADER)
+            logger.lifecycle(TABLE_BORDER)
 
             successTests.each {
                 successTest -> logTestResult(successTest, "SUCCESS", GREEN, RESET)
@@ -124,7 +131,7 @@ test {
                 failedTest -> logTestResult(failedTest, "FAILED", RED, RESET)
             }
 
-            logger.lifecycle("+--------------------+--------------------------------------------------+----------+")
+            logger.lifecycle(TABLE_BORDER)
         }
 
         private void logStats() {
@@ -146,7 +153,7 @@ test {
         private void logTestResult(TestDescriptor testDescriptor, String result, String colour1, String colour2) {
             def parentName = testDescriptor.parent.displayName
             def displayName = testDescriptor.getDisplayName()
-            printf("|%s|%s|%s%s%s|\n", center(parentName, 20), center(displayName, 50), colour1, center(result, 10), colour2)
+            printf("|%s|%s|%s%s%s|\n", center(parentName, CLASSNAME_COL_WIDTH), center(displayName, TESTNAME_COL_WIDTH), colour1, center(result, STATUS_COL_WIDTH), colour2)
         }
 
         private String center(String s, int maxWidth) {
