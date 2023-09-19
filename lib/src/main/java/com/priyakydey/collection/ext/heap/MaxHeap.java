@@ -52,7 +52,9 @@ public class MaxHeap<T> extends Heap<T> {
         int currIndex = data.size() - 1;
         while (currIndex >= 1) {
             int parentIndex = getIndexOfParent(currIndex);
-            T child = data.get(currIndex), parent = data.get(parentIndex);
+            T child = data.get(currIndex);
+            T parent = data.get(parentIndex);
+
             if (compare(child, parent) > 0) {
                 Collections.swap(data, currIndex, parentIndex);
             } else {
@@ -86,9 +88,9 @@ public class MaxHeap<T> extends Heap<T> {
         int currIndex = 0;
 
         while (currIndex < data.size()) {
-            int leftChildIndex = getIndexOfLeftChild(currIndex), rightChildIndex =
-                getIndexOfRightChild(currIndex);
-
+            int leftChildIndex = getIndexOfLeftChild(currIndex);
+            int rightChildIndex = getIndexOfRightChild(currIndex);
+            
             if (leftChildIndex >= data.size()) {
                 break;
             }
